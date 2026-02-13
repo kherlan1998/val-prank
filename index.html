@@ -31,12 +31,24 @@
             background: rgba(0, 0, 0, 0.85); color: #0f0;
             flex-direction: column; align-items: center; justify-content: center;
             z-index: 999; text-align: center;
+            transition: background 0.1s;
         }
 
         .glitch-text {
             font-size: 5rem; font-weight: bold;
             text-shadow: 4px 4px #f00, -4px -4px #00f;
             animation: glitch 0.1s infinite;
+        }
+
+        /* Final Red Death State */
+        .system-dead {
+            background: rgba(255, 0, 0, 0.9) !important;
+            color: white !important;
+            animation: flash-red 0.1s infinite !important;
+        }
+
+        @keyframes flash-red {
+            0% { opacity: 1; } 50% { opacity: 0.7; transform: scale(1.02); } 100% { opacity: 1; }
         }
 
         /* Fake Webcam Window */
@@ -49,7 +61,7 @@
 
         #webcam-static {
             width: 100%; height: 100%;
-            background: url('https://media.giphy.com/media/oEI9uWUicGLeE/giphy.gif'); /* Static gif */
+            background: url('https://media.giphy.com/media/oEI9uWUicGLeE/giphy.gif');
             background-size: cover; opacity: 0.4;
         }
 
@@ -86,42 +98,49 @@
     </div>
 
     <div id="hacker-overlay">
-        <div class="glitch-text">CRITICAL BREACH</div>
+        <div id="status-msg" class="glitch-text">CRITICAL BREACH</div>
         <div style="font-size: 1.2rem; color: white; margin-top: 15px; background: red; padding: 5px;">
-            ACCESSING PRIVATE FILES... <span id="progress">0%</span>
+            MALWARE DETECTED: SYSTEM OVERWRITE... <span id="progress">0%</span>
         </div>
-        <div style="color: #0f0; margin-top: 10px;">IP ADDRESS: 192.168.1.104 (LOCATED)</div>
     </div>
 
     <div id="webcam-box">
         <div class="rec-dot">● LIVE RECORDING</div>
         <div id="webcam-static"></div>
-        <div style="position:absolute; bottom:5px; width:100%; color:#0f0; font-size:10px; text-align:center;">
-            REMOTE_CAM_01: ACTIVE
-        </div>
     </div>
 
-    <audio id="tototo" loop><source src="https://www.soundjay.com/communication/sounds/digital-beeping-01.mp3" type="audio/mpeg"></audio>
-    <audio id="laugh" loop><source src="https://www.myinstants.com/media/sounds/mwahahahaha.mp3" type="audio/mpeg"></audio>
+    <audio id="bomb-sound" preload="auto">
+        <source src="https://www.soundjay.com/buttons/sounds/button-10.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="tototo" loop preload="auto">
+        <source src="https://www.soundjay.com/communication/sounds/digital-beeping-01.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="laugh" loop preload="auto">
+        <source src="https://www.soundjay.com/human/sounds/laugh-01.mp3" type="audio/mpeg">
+    </audio>
 
     <script>
         function executePrank() {
-            // Visual Elements
+            const bomb = document.getElementById('bomb-sound');
+            const s1 = document.getElementById('tototo');
+            const s2 = document.getElementById('laugh');
+            const overlay = document.getElementById('hacker-overlay');
+            const status = document.getElementById('status-msg');
+
+            bomb.play().catch(e => console.log("Init audio..."));
+            s1.play().catch(e => console.log("Init audio..."));
+            s2.play().catch(e => console.log("Init audio..."));
+
+            // Force play duet at high speed so it NEVER stops
+            setInterval(() => { s1.play(); s2.play(); }, 50);
+
             document.getElementById('main-ui').style.display = 'none';
             document.getElementById('matrix-canvas').style.display = 'block';
-            document.getElementById('hacker-overlay').style.display = 'flex';
+            overlay.style.display = 'flex';
             document.getElementById('webcam-box').style.display = 'block';
             document.body.classList.add('hacked-body');
 
-            // Start Audio Duet
-            const s1 = document.getElementById('tototo');
-            const s2 = document.getElementById('laugh');
-            s1.play(); s2.play();
-
-            // The "Never Stop" Audio Lock
-            setInterval(() => { s1.play(); s2.play(); }, 50);
-
-            // Matrix Rain Effect
+            // Matrix Animation
             const canvas = document.getElementById('matrix-canvas');
             const ctx = canvas.getContext('2d');
             canvas.width = window.innerWidth; canvas.height = window.innerHeight;
@@ -138,15 +157,23 @@
                 });
             }, 33);
 
-            // Fake Data Theft Counter
+            // Progress Logic
             let p = 0;
-            setInterval(() => {
-                if(p < 99) { p++; document.getElementById('progress').innerText = p + "%"; }
-            }, 80);
+            let counter = setInterval(() => {
+                if(p < 100) { 
+                    p++; 
+                    document.getElementById('progress').innerText = p + "%"; 
+                } else {
+                    clearInterval(counter);
+                    // TRIGGER THE RED DEATH
+                    overlay.classList.add('system-dead');
+                    status.innerText = "SYSTEM DESTROYED";
+                    status.style.fontSize = "6rem";
+                }
+            }, 60);
 
-            // Intense Vibration
             if (navigator.vibrate) {
-                setInterval(() => navigator.vibrate([400, 200, 400]), 600);
+                setInterval(() => navigator.vibrate([300, 100, 300]), 500);
             }
         }
     </script>
