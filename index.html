@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Special Surprise ❤️</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #ffebee;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            transition: background 0.1s;
+        }
+
+        .container { text-align: center; z-index: 10; }
+        h1 { color: #d32f2f; font-size: 3rem; }
+        
+        button {
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            background-color: #ff4081;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        /* The "Prank" Animations */
+        @keyframes shake {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            20% { transform: translate(-3px, 0px) rotate(1deg); }
+            40% { transform: translate(3px, 2px) rotate(-1deg); }
+            60% { transform: translate(-3px, 1px) rotate(0deg); }
+            80% { transform: translate(3px, -1px) rotate(1deg); }
+            100% { transform: translate(1px, -2px) rotate(-1deg); }
+        }
+
+        .glitch-active {
+            animation: shake 0.1s infinite;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 2px, 3px 100%;
+        }
+
+        #error-msg {
+            display: none;
+            color: white;
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: bold;
+            font-size: 2rem;
+            background: black;
+            padding: 20px;
+            border: 2px solid lime;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="content">
+        <h1>Happy Valentine's Day! 🌹</h1>
+        <p>I got you something special...</p>
+        <button onclick="startPrank()">Get Flowers</button>
+    </div>
+
+    <div id="error-msg">
+        FATAL ERROR: LOVE_OVERLOAD_EXCEPTION<br>
+        SYSTEM CRITICAL... JUST KIDDING! 😂
+    </div>
+
+    <script>
+        function startPrank() {
+            // Vibrate mobile devices
+            if (navigator.vibrate) {
+                navigator.vibrate([500, 110, 500, 110, 500]);
+            }
+
+            // Trigger visual chaos
+            document.body.classList.add('glitch-active');
+            document.getElementById('content').style.display = 'none';
+            document.getElementById('error-msg').style.display = 'block';
+
+            // Randomize background color rapidly like a broken TV
+            setInterval(() => {
+                const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffffff', '#000000'];
+                document.body.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            }, 50);
+        }
+    </script>
+</body>
+</html>
