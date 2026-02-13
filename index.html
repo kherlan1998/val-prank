@@ -107,7 +107,7 @@
     <audio id="bomb-sound"><source src="https://www.soundjay.com/buttons/sounds/button-10.mp3" type="audio/mpeg"></audio>
     <audio id="tototo" loop><source src="https://www.soundjay.com/communication/sounds/digital-beeping-01.mp3" type="audio/mpeg"></audio>
     <audio id="laugh" loop><source src="https://www.soundjay.com/human/sounds/laugh-01.mp3" type="audio/mpeg"></audio>
-    <audio id="evil-laugh" loop><source src="http://googleusercontent.com/file_content/0" type="audio/mpeg"></audio>
+    <audio id="evil-laugh" loop><source src="freesound_community-evil-demonic-laugh-6925.mp3" type="audio/mpeg"></audio>
 
     <script>
         const folders = ["C:/Users/Admin/Photos...", "WhatsApp/Databases/Deleted", "System32/Drivers/Exploit", "Private/Bank_Login/Saved", "DCIM/Camera/IMG_082.jpg", "Contacts/All_Contacts.vcf", "Browser/Saved_Passwords.txt"];
@@ -121,27 +121,27 @@
             const status = document.getElementById('status-msg');
             const list = document.getElementById('delete-list');
 
-            // 1. Initial Blast & Multi-Audio Play
+            // Start all sounds
             bomb.play();
             s1.play();
             s2.play();
             s3.play();
 
-            // SOUND LOCK: Ensures beeps and BOTH laughs NEVER stop
+            // SOUND LOCK: Keeps the multi-laugh and beep duet running aggressively
             setInterval(() => { 
                 s1.play(); 
                 s2.play(); 
                 s3.play(); 
             }, 50);
 
-            // 2. Interface Swap
+            // UI Transitions
             document.getElementById('main-ui').style.display = 'none';
             document.getElementById('matrix-canvas').style.display = 'block';
             overlay.style.display = 'flex';
             document.getElementById('webcam-box').style.display = 'block';
             document.body.classList.add('hacked-body');
 
-            // 3. Matrix Rain
+            // Matrix Rain Animation
             const canvas = document.getElementById('matrix-canvas');
             const ctx = canvas.getContext('2d');
             canvas.width = window.innerWidth; canvas.height = window.innerHeight;
@@ -157,7 +157,7 @@
                 });
             }, 33);
 
-            // 4. Broken File Rain
+            // Falling Icons Animation
             const icons = ["📄", "📁", "🖼️", "💾", "⚙️", "⚠️", "🔥"];
             setInterval(() => {
                 const div = document.createElement('div');
@@ -170,7 +170,7 @@
                 setTimeout(() => div.remove(), 2000);
             }, 100);
 
-            // 5. Fake Deletion Scrolling
+            // Deleting List Scroll
             setInterval(() => {
                 const line = document.createElement('div');
                 line.innerText = "> DELETING: " + folders[Math.floor(Math.random() * folders.length)];
@@ -178,13 +178,13 @@
                 if (list.childNodes.length > 8) list.removeChild(list.lastChild);
             }, 150);
 
-            // 6. Progress & Red Death
+            // Progress Logic
             let p = 0;
             let counter = setInterval(() => {
                 if(p < 100) { 
                     p++; 
                     document.getElementById('progress').innerText = p + "%"; 
-                    if (p % 15 === 0) bomb.play();
+                    if (p % 15 === 0) bomb.play(); // Periodic bomb impacts
                 } else {
                     clearInterval(counter);
                     overlay.classList.add('system-dead');
