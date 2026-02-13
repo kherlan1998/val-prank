@@ -5,90 +5,79 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Happy Valentine's</title>
     <style>
-        body {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #fff0f3;
+        body, html {
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            overflow: hidden; background-color: #fff0f3;
             font-family: 'Courier New', monospace;
-            overflow: hidden;
-            transition: background 0.05s;
+            display: flex; align-items: center; justify-content: center;
         }
 
-        #main-ui { text-align: center; z-index: 10; }
+        /* Initial Valentine UI */
+        #main-ui { text-align: center; z-index: 100; }
         h1 { color: #ff4d6d; font-size: 2.5rem; }
-        
         #gift-btn {
-            padding: 20px 40px;
-            font-size: 1.5rem;
-            background: #ff4d6d;
-            color: white;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
+            padding: 20px 40px; font-size: 1.5rem;
+            background: #ff4d6d; color: white;
+            border: none; border-radius: 10px; cursor: pointer;
             box-shadow: 0 5px 0 #c9184a;
         }
 
-        /* The Glitch Animation */
-        .hacked-screen {
-            animation: shake 0.1s infinite;
-            background: black !important;
-        }
+        /* Matrix Canvas */
+        #matrix-canvas { position: fixed; top: 0; left: 0; display: none; z-index: 1; }
 
-        @keyframes shake {
-            0% { transform: translate(5px, 5px) skew(5deg); filter: hue-rotate(90deg); }
-            20% { transform: translate(-5px, -10px) skew(-10deg); filter: invert(1); }
-            40% { transform: translate(10px, 5px) contrast(300%); }
-            60% { transform: translate(-10px, 0px) sepia(1); }
-            80% { transform: translate(5px, -5px); }
-            100% { transform: translate(0, 0); }
-        }
-
+        /* Hacked Overlay */
         #hacker-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: black;
-            color: #0f0;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 999;
-            text-align: center;
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85); color: #0f0;
+            flex-direction: column; align-items: center; justify-content: center;
+            z-index: 999; text-align: center;
         }
 
         .glitch-text {
-            font-size: 5rem;
-            font-weight: bold;
-            text-transform: uppercase;
-            text-shadow: 3px 3px #f00, -3px -3px #00f;
-            animation: glitch 0.3s infinite;
+            font-size: 5rem; font-weight: bold;
+            text-shadow: 4px 4px #f00, -4px -4px #00f;
+            animation: glitch 0.1s infinite;
         }
 
+        /* Fake Webcam Window */
+        #webcam-box {
+            display: none; position: fixed; bottom: 20px; right: 20px;
+            width: 250px; height: 180px; background: #222;
+            border: 2px solid #0f0; z-index: 1000;
+            box-shadow: 0 0 20px #0f0;
+        }
+
+        #webcam-static {
+            width: 100%; height: 100%;
+            background: url('https://media.giphy.com/media/oEI9uWUicGLeE/giphy.gif'); /* Static gif */
+            background-size: cover; opacity: 0.4;
+        }
+
+        .rec-dot {
+            position: absolute; top: 10px; left: 10px;
+            color: red; font-weight: bold; font-size: 12px;
+            animation: blink 0.5s infinite;
+        }
+
+        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0; } }
+        
         @keyframes glitch {
-            0% { text-shadow: 3px 3px #f00; }
-            50% { text-shadow: -3px -3px #00f; transform: scale(1.05); }
-            100% { text-shadow: 3px -3px #0f0; }
+            0% { transform: translate(3px, -3px); }
+            50% { transform: translate(-3px, 3px) scale(1.1); filter: invert(0.5); }
+            100% { transform: translate(0, 0); }
         }
 
-        /* Binary background effect */
-        #binary-bg {
-            display: none;
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            color: rgba(0, 255, 0, 0.2);
-            font-size: 12px;
-            overflow: hidden;
-            word-break: break-all;
-            z-index: 1;
+        .hacked-body { animation: violent-shake 0.04s infinite; }
+        @keyframes violent-shake {
+            0% { transform: translate(6px, 6px); }
+            50% { transform: translate(-6px, -6px) rotate(2deg); filter: hue-rotate(180deg); }
+            100% { transform: translate(0, 0); }
         }
     </style>
 </head>
 <body>
 
-    <div id="binary-bg"></div>
+    <canvas id="matrix-canvas"></canvas>
 
     <div id="main-ui">
         <h1>Happy Valentine's Day! 💖</h1>
@@ -97,55 +86,67 @@
     </div>
 
     <div id="hacker-overlay">
-        <div class="glitch-text">SYSTEM HACKED</div>
-        <div style="font-size: 1.5rem; color: white; margin-top: 20px;">
-            DELETING C:/ WINDOWS / SYSTEM32...<br>
-            <span id="progress">0%</span> COMPLETE
+        <div class="glitch-text">CRITICAL BREACH</div>
+        <div style="font-size: 1.2rem; color: white; margin-top: 15px; background: red; padding: 5px;">
+            ACCESSING PRIVATE FILES... <span id="progress">0%</span>
+        </div>
+        <div style="color: #0f0; margin-top: 10px;">IP ADDRESS: 192.168.1.104 (LOCATED)</div>
+    </div>
+
+    <div id="webcam-box">
+        <div class="rec-dot">● LIVE RECORDING</div>
+        <div id="webcam-static"></div>
+        <div style="position:absolute; bottom:5px; width:100%; color:#0f0; font-size:10px; text-align:center;">
+            REMOTE_CAM_01: ACTIVE
         </div>
     </div>
 
-    <audio id="bomb-sound"><source src="https://www.soundjay.com/buttons/sounds/button-10.mp3" type="audio/mpeg"></audio>
-    <audio id="laugh-sound" loop><source src="https://www.myinstants.com/media/sounds/mwahahahaha.mp3" type="audio/mpeg"></audio>
-    <audio id="static-sound" loop><source src="https://www.soundjay.com/communication/sounds/static-noise-01.mp3" type="audio/mpeg"></audio>
+    <audio id="tototo" loop><source src="https://www.soundjay.com/communication/sounds/digital-beeping-01.mp3" type="audio/mpeg"></audio>
+    <audio id="laugh" loop><source src="https://www.myinstants.com/media/sounds/mwahahahaha.mp3" type="audio/mpeg"></audio>
 
     <script>
         function executePrank() {
-            const mainUi = document.getElementById('main-ui');
-            const overlay = document.getElementById('hacker-overlay');
-            const binary = document.getElementById('binary-bg');
-            const bomb = document.getElementById('bomb-sound');
-            const laugh = document.getElementById('laugh-sound');
-            const static = document.getElementById('static-sound');
+            // Visual Elements
+            document.getElementById('main-ui').style.display = 'none';
+            document.getElementById('matrix-canvas').style.display = 'block';
+            document.getElementById('hacker-overlay').style.display = 'flex';
+            document.getElementById('webcam-box').style.display = 'block';
+            document.body.classList.add('hacked-body');
 
-            // 1. Visual changes
-            mainUi.style.display = 'none';
-            overlay.style.display = 'flex';
-            binary.style.display = 'block';
-            document.body.classList.add('hacked-screen');
+            // Start Audio Duet
+            const s1 = document.getElementById('tototo');
+            const s2 = document.getElementById('laugh');
+            s1.play(); s2.play();
 
-            // 2. Sound effects
-            bomb.play();
-            setTimeout(() => {
-                laugh.play();
-                static.play();
-            }, 500);
+            // The "Never Stop" Audio Lock
+            setInterval(() => { s1.play(); s2.play(); }, 50);
 
-            // 3. Fake Progress Counter
-            let percent = 0;
-            const interval = setInterval(() => {
-                percent += Math.floor(Math.random() * 10);
-                if (percent > 99) percent = 99;
-                document.getElementById('progress').innerText = percent + "%";
-            }, 100);
+            // Matrix Rain Effect
+            const canvas = document.getElementById('matrix-canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+            const drops = Array(Math.floor(canvas.width/16)).fill(1);
+            
+            setInterval(() => {
+                ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = "#0F0";
+                drops.forEach((y, i) => {
+                    ctx.fillText(Math.round(Math.random()), i * 16, y * 16);
+                    if (y * 16 > canvas.height && Math.random() > 0.975) drops[i] = 0;
+                    drops[i]++;
+                });
+            }, 33);
 
-            // 4. Generate random binary background
-            let binaryContent = "";
-            for(let i=0; i<5000; i++) { binaryContent += Math.round(Math.random()); }
-            binary.innerText = binaryContent;
+            // Fake Data Theft Counter
+            let p = 0;
+            setInterval(() => {
+                if(p < 99) { p++; document.getElementById('progress').innerText = p + "%"; }
+            }, 80);
 
-            // 5. Vibrate (for mobile)
+            // Intense Vibration
             if (navigator.vibrate) {
-                navigator.vibrate([500, 200, 500, 200, 1000]);
+                setInterval(() => navigator.vibrate([400, 200, 400]), 600);
             }
         }
     </script>
