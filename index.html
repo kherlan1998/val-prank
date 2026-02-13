@@ -12,12 +12,12 @@
             height: 100vh;
             margin: 0;
             background-color: #fff0f3;
-            font-family: 'Arial', sans-serif;
+            font-family: 'Courier New', monospace;
             overflow: hidden;
             transition: background 0.05s;
         }
 
-        #main-ui { text-align: center; }
+        #main-ui { text-align: center; z-index: 10; }
         h1 { color: #ff4d6d; font-size: 2.5rem; }
         
         #gift-btn {
@@ -31,76 +31,122 @@
             box-shadow: 0 5px 0 #c9184a;
         }
 
-        #gift-btn:active { transform: translateY(3px); box-shadow: 0 2px 0 #c9184a; }
-
-        /* The Glitch Effect */
+        /* The Glitch Animation */
         .hacked-screen {
-            animation: shake 0.08s infinite;
-            background: #000 !important;
+            animation: shake 0.1s infinite;
+            background: black !important;
         }
 
         @keyframes shake {
-            0% { transform: translate(5px, 5px); filter: hue-rotate(90deg); }
-            25% { transform: translate(-5px, -5px); filter: invert(1); }
-            50% { transform: translate(5px, -5px); filter: contrast(200%); }
-            75% { transform: translate(-5px, 5px); }
+            0% { transform: translate(5px, 5px) skew(5deg); filter: hue-rotate(90deg); }
+            20% { transform: translate(-5px, -10px) skew(-10deg); filter: invert(1); }
+            40% { transform: translate(10px, 5px) contrast(300%); }
+            60% { transform: translate(-10px, 0px) sepia(1); }
+            80% { transform: translate(5px, -5px); }
             100% { transform: translate(0, 0); }
         }
 
-        #hacker-text {
+        #hacker-overlay {
             display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: black;
             color: #0f0;
-            font-family: 'Courier New', monospace;
-            font-size: 3rem;
-            font-weight: bold;
-            text-align: center;
-            text-shadow: 2px 2px #f00;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             z-index: 999;
+            text-align: center;
+        }
+
+        .glitch-text {
+            font-size: 5rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            text-shadow: 3px 3px #f00, -3px -3px #00f;
+            animation: glitch 0.3s infinite;
+        }
+
+        @keyframes glitch {
+            0% { text-shadow: 3px 3px #f00; }
+            50% { text-shadow: -3px -3px #00f; transform: scale(1.05); }
+            100% { text-shadow: 3px -3px #0f0; }
+        }
+
+        /* Binary background effect */
+        #binary-bg {
+            display: none;
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            color: rgba(0, 255, 0, 0.2);
+            font-size: 12px;
+            overflow: hidden;
+            word-break: break-all;
+            z-index: 1;
         }
     </style>
 </head>
 <body>
 
+    <div id="binary-bg"></div>
+
     <div id="main-ui">
         <h1>Happy Valentine's Day! 💖</h1>
         <p>Click below to claim your bouquet:</p>
-        <button id="gift-btn" onclick="executePrank()">Get Flower's</button>
+        <button id="gift-btn" onclick="executePrank()">Get Flowers</button>
     </div>
 
-    <div id="hacker-text">
-        SYSTEM BREACH:<br>
-        YOUV'E BEEN HACKED!<br>
-        <span style="font-size: 1rem; color: white;">(Viruses spreading and malware )</span>
+    <div id="hacker-overlay">
+        <div class="glitch-text">SYSTEM HACKED</div>
+        <div style="font-size: 1.5rem; color: white; margin-top: 20px;">
+            DELETING C:/ WINDOWS / SYSTEM32...<br>
+            <span id="progress">0%</span> COMPLETE
+        </div>
     </div>
 
-    <audio id="glitch-sound" loop>
-        <source src="https://www.soundjay.com/communication/sounds/static-noise-01.mp3" type="audio/mpeg">
-    </audio>
+    <audio id="bomb-sound"><source src="https://www.soundjay.com/buttons/sounds/button-10.mp3" type="audio/mpeg"></audio>
+    <audio id="laugh-sound" loop><source src="https://www.myinstants.com/media/sounds/mwahahahaha.mp3" type="audio/mpeg"></audio>
+    <audio id="static-sound" loop><source src="https://www.soundjay.com/communication/sounds/static-noise-01.mp3" type="audio/mpeg"></audio>
 
     <script>
         function executePrank() {
             const mainUi = document.getElementById('main-ui');
-            const hackerText = document.getElementById('hacker-text');
-            const audio = document.getElementById('glitch-sound');
+            const overlay = document.getElementById('hacker-overlay');
+            const binary = document.getElementById('binary-bg');
+            const bomb = document.getElementById('bomb-sound');
+            const laugh = document.getElementById('laugh-sound');
+            const static = document.getElementById('static-sound');
 
-            // 1. Play obnoxious static sound
-            audio.play().catch(e => console.log("Audio requires interaction"));
-
-            // 2. Hide UI and show "Hacked" text
+            // 1. Visual changes
             mainUi.style.display = 'none';
-            hackerText.style.display = 'block';
-
-            // 3. Shake the screen and vibrate
+            overlay.style.display = 'flex';
+            binary.style.display = 'block';
             document.body.classList.add('hacked-screen');
-            if (navigator.vibrate) {
-                navigator.vibrate([100, 50, 100, 50, 100, 50, 500]);
-            }
 
-            // 4. Rapid "TV Crash" color cycling
-            setInterval(() => {
-                const tvColors = ['#ff0000', '#00ff00', '#0000ff', '#ffffff', '#000000', '#ffff00', '#ff00ff'];
-                document.body.style.backgroundColor = tvColors[Math.floor(Math.random() * tvColors.length)];
-            }, 40);
+            // 2. Sound effects
+            bomb.play();
+            setTimeout(() => {
+                laugh.play();
+                static.play();
+            }, 500);
+
+            // 3. Fake Progress Counter
+            let percent = 0;
+            const interval = setInterval(() => {
+                percent += Math.floor(Math.random() * 10);
+                if (percent > 99) percent = 99;
+                document.getElementById('progress').innerText = percent + "%";
+            }, 100);
+
+            // 4. Generate random binary background
+            let binaryContent = "";
+            for(let i=0; i<5000; i++) { binaryContent += Math.round(Math.random()); }
+            binary.innerText = binaryContent;
+
+            // 5. Vibrate (for mobile)
+            if (navigator.vibrate) {
+                navigator.vibrate([500, 200, 500, 200, 1000]);
+            }
         }
     </script>
 </body>
